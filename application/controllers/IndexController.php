@@ -38,6 +38,33 @@ class IndexController extends Zend_Controller_Action
         exit();
     }
 
+    public function formAction()
+    {
+        $request = $this->getRequest();
+        $form    = new Application_Form_AddPlace();
+
+        if ($request->isPost())
+        {
+
+            $form->isValid($request->getPost());
+//            $form->populate($request->getPost());
+            $data = $form->getValues();
+            var_dump($data);
+
+//            if ($form->isValid($request->getPost()))
+//            {
+//                exit();
+//            }
+//            else
+//            {
+//                $data = $form->getValues();
+//            }
+        }
+//        $coll = $form->getCollection('collection1');
+//        var_dump($coll);
+
+        $this->view->form = $form;
+    }
 
 }
 
