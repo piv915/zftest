@@ -30,10 +30,10 @@ class B_Form_SubForm extends B_Form
         $decorators = $this->getDecorators();
         if (empty($decorators)) {
             $this->addDecorator('FormElements')
-                ->addDecorator('HtmlTag', array('tag' => 'dl'))
-                ->addDecorator('Fieldset')
-                ->addDecorator('DtDdWrapper');
-
+//                ->addDecorator('HtmlTag', array('tag' => 'dl'))
+//                ->addDecorator('Fieldset')
+//                ->addDecorator('DtDdWrapper');
+            ;
         }
 //        $this->addPrefixPath('B_Form', 'B/Form');
 //        $this->addDecorator('DynamicTemplate');

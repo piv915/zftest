@@ -21,7 +21,7 @@ class B_Form_Decorator_DynamicTemplate extends Zend_Form_Decorator_Abstract
                 $decorator = $item->getDecorators();
                 if(is_array($decorator))
                     foreach($decorator as $d) {
-                        $decorator = $d; break; // get first element :)
+                        $decorator = $d; break; // get first element
                     }
 
                 $clone = clone $item;
@@ -29,10 +29,12 @@ class B_Form_Decorator_DynamicTemplate extends Zend_Form_Decorator_Abstract
                 $clone->setAttrib('id',null);
 
                 $decorator->setElement($clone);
-                $template[] = $decorator->render('');
+                $template[] = '<element name="'. $clone->getName()
+                    .'">'.$decorator->render('').'</element>';
             }
         }
-        $template = '<span data-template="'.htmlspecialchars( join('', $template) ).'"></span>';
+        $template = '<span data-template="'.htmlspecialchars( join('', $template) ).'" id="'.
+            str_replace('[0]','',$this->getElement()->getName()).'-template"></span>';
         return $template.' '.$content;
     }
 }

@@ -19,37 +19,42 @@ class Application_Form_AddPlace extends B_Form
 
         )));
 
-        $this->addElement(new Zend_Form_Element_Select(self::CATEGORY, [
-            'multiOptions' => [1 => 'Hello', 2 => 'Goodbye'],
-            'validators'   => [ 'Alnum', 'Govnum' ]
-        ]));
-//        $phoneGroup = new B_Form_Element_Group();
-//
-//        $phoneGroup->addElement(new Zend_Form_Element_Text(self::PHONE, [
-//            'validators' => ['Digits'],
-//            'required'   => true,
+//        $categoryTwoLevel = [
+//            'first' => [1 => 'Hello', 2 => 'Goodbye'],
+//            'second' => [
+//                1 => [ 5 => 'Freddi', 6 => 'Johnatan' ],
+//                2 => [ 18 => 'Baby' ]
+//            ]
+//        ];
+//        $this->addElement(new Zend_Form_Element_Select(self::CATEGORY, [
+//            'multiOptions' => $categoryTwoLevel['first'],
 //        ]));
+//
+//        $this->addElement(new B_Form_Element_DependentSelect(self::SUBCATEGORY, [
+//            'parent' => $this->getElement(self::CATEGORY),
+//            'dataSource'   => $categoryTwoLevel['second']
+//        ]));
+
+        $phoneGroup = new B_Form_Element_Group();
+
+        $phoneGroup->addElement(new Zend_Form_Element_Text(self::PHONE, [
+            'validators' => ['Digits'],
+            'required'   => true,
+        ]));
 //        $phoneGroup->addElement('checkbox', 'chbx', [ 'multiOptions' => [ 'OK', 'NotOK' ]]);
 //        $phoneGroup->addElement('multiCheckbox', 'mchbx', [ 'multiOptions' => [ 'OK', 'NotOK' ]]);
-//
-//        $this->addCollection($phoneGroup, self::PHONE, [
-//            'dynamic' => true,
-//            'count' => 2,
-//            'create_template' => true
-//        ]);
 
-//        $attributesSchema = [
-//            1 => ['Radio', 'Catering', [ 'multiOptions' => [ 1 => 'v1', 2 => 'v2' ] ]],
-//            2 => ['Radio', 'Children',  [ 'multiOptions' => [ 1 => 'v1', 2 => 'v2' ] ]],
-//            3 => ['Text', 'Comment',  []],
-//            4 => ['Checkbox', 'Wifi',  []],
-//            5 => ['MultiCheckbox', 'Cuisine',  [ 'multiOptions' => [ 1 => 'v1', 2 => 'v2' ] ]],
-//            6 => ['Select', 'Parking',  [  'multiOptions' => [ 5 => 'v5', 7 => 'v7']  ]]
-//
-//        ];
-//        $attributes = new B_Form_Element_Attributes([
-//            'schema' => $attributesSchema
-//        ]);
+        $this->addCollection($phoneGroup, self::PHONE, [
+            'dynamic' => true,
+            'count' => 2,
+            'create_template' => true
+        ]);
+
+
+        $attributes = new B_Form_Element_Attributes([
+            'schema' => (new B_Shared_Attributes_SchemaProvider())->getSchema()
+        ]);
+        $this->addSubForm($attributes, self::ATTRIBUTES);
 //        $this->addCollection($attributes, self::ATTRIBUTES, [
 //
 //        ]);

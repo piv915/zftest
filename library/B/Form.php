@@ -15,7 +15,7 @@ class B_Form extends Zend_Form
      * @param $name string
      * @param array $options
      */
-    public function addCollection(B_Form_Element_Group $subForm, $name, array $options)
+    public function addCollection(B_Form_Element_Group $subForm, $name, array $options=null)
     {
         $count = isset($options['count']) ? intval($options['count']) : 1;
         for($i=0; $i < $count; $i++) {
@@ -40,11 +40,9 @@ class B_Form extends Zend_Form
     public function getCollection($name)
     {
         $result = [];
-
-        if(!isset($this->_collections[$name])) {
+        if(!array_key_exists($name, $this->_collections)) {
             return null;
         }
-
         foreach($this->_subForms as $name => $subForm) {
             $matchPosition = strpos($name, '[');
             if(!$matchPosition)

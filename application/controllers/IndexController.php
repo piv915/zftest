@@ -49,7 +49,9 @@ class IndexController extends Zend_Controller_Action
             $form->isValid($request->getPost());
 //            $form->populate($request->getPost());
             $data = $form->getValues();
-            var_dump($data);
+            var_dump($data['attributes']['data']);
+            $validData = $form->getValidValues($data);
+//            var_dump($validData);
 
 //            if ($form->isValid($request->getPost()))
 //            {
@@ -64,6 +66,8 @@ class IndexController extends Zend_Controller_Action
 //        var_dump($coll);
 
         $this->view->form = $form;
+        $t = $form->getSubForm($form::ATTRIBUTES)->getTemplate();
+        $this->view->attributesTemplate = $t;
     }
 
 }
