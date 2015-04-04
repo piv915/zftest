@@ -18,14 +18,14 @@ class P_Robox_API
     private $config;
     private $language;
 
-    public function __construct()
+    public function __construct($language=null)
     {
         $reader = new Zend_Config_Ini('/web/zftest/application/configs/robox.ini');
         $this->config = $reader->robokassa;
-        $this->language = 'ru';
+        $this->language = $language ? $language : 'en';
     }
 
-    public function getCurrencies()
+    public function getCurrencies($flatten=false)
     {
         $name = 'GetCurrencies';
 
@@ -36,29 +36,41 @@ class P_Robox_API
         }
         $xpath = new DOMXPath($doc);
 
-        $query = '/*/Groups/*';
-        $groups = $this->xQuery($xpath, $query, $doc->documentElement->namespaceURI);
-
         $result = [];
-        foreach ($groups as $element) {
-            if($element->nodeName == 'Group' && $element->nodeType == XML_ELEMENT_NODE) {
-                $groupCode = $element->getAttribute('Code');
-                $result[$groupCode] = [
-                    'description' => $element->getAttribute('Description'),
-                    'items' => []
-                ];
-                $query = 'Items/Currency';
-                $currencyList = $this->xQuery($xpath, $query, $doc->documentElement->namespaceURI, $element);
-                foreach($currencyList as $elem) {
-                    if($elem->nodeName == 'Currency' && $element->nodeType == XML_ELEMENT_NODE) {
-                        $result[$groupCode]['items'][] = [
-                            'label' => $elem->getAttribute('Label'),
-                            'name'  => $elem->getAttribute('Name')
-                        ];
+        if($flatten) {
+            $query = '//Items/Currency';
+            $currencyList = $this->xQuery($xpath, $query, $doc->documentElement->namespaceURI);
+            foreach($currencyList as $elem) {
+                if($elem->nodeName == 'Currency' && $elem->nodeType == XML_ELEMENT_NODE) {
+                    $result[$elem->getAttribute('Label')] = $elem->getAttribute('Name');
+                }
+            }
+        }
+        else {
+            $query = '/*/Groups/*';
+            $groups = $this->xQuery($xpath, $query, $doc->documentElement->namespaceURI);
+
+            foreach ($groups as $element) {
+                if($element->nodeName == 'Group' && $element->nodeType == XML_ELEMENT_NODE) {
+                    $groupCode = $element->getAttribute('Code');
+                    $result[$groupCode] = [
+                        'description' => $element->getAttribute('Description'),
+                        'items' => []
+                    ];
+                    $query = 'Items/Currency';
+                    $currencyList = $this->xQuery($xpath, $query, $doc->documentElement->namespaceURI, $element);
+                    foreach($currencyList as $elem) {
+                        if($elem->nodeName == 'Currency' && $elem->nodeType == XML_ELEMENT_NODE) {
+                            $result[$groupCode]['items'][] = [
+                                'label' => $elem->getAttribute('Label'),
+                                'name'  => $elem->getAttribute('Name')
+                            ];
+                        }
                     }
                 }
             }
         }
+
         return $result;
     }
 
@@ -120,6 +132,27 @@ class P_Robox_API
                 }
             }
         }
+        return $result;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getLanguage()
+    {
+        return $this->language;
+    }
+
+    public function getFormParams($outSum, $invoiceId)
+    {
+        $result = [
+            'MrchLogin' => $this->config->merchantid,
+            'OutSum' => $outSum,
+            'InvId' => $invoiceId
+        ];
+        $result['SignatureValue'] = md5($this->config->merchantid . ":$outSum:$invoiceId:" . $this->config->pass1);
+        $result['payUrl'] = $this->config->payUrl;
+
         return $result;
     }
 

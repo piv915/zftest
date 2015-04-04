@@ -1,0 +1,28 @@
+<?php
+
+$products = $this->products;
+
+?>
+<?php $this->headScript()
+	->appendFile('https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js')
+	->appendFile('/js/cart.js')
+;
+?>
+<div id="cart">
+	Товаров <span class="count">0</span> на сумму <span class="sum">0</span>.<br/>
+	<a href="/cart">Оформить</a>
+</div>
+<div id="view-content">
+	<?php foreach ($products as $product):?>
+	<div class="product">
+		<?=$product->getTitle();?>
+		&nbsp;
+		<?=$product->getCost();?>
+		&nbsp;
+		<a href="#" class="product-add"
+		   data-product-id="<?=$product->getId();?>"
+		   data-product-cost="<?=$product->getCost();?>"
+			>Add to cart</a>
+	</div>
+	<?php endforeach; ?>
+</div>

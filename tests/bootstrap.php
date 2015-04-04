@@ -18,3 +18,4 @@ set_include_path(implode(PATH_SEPARATOR, array(
 require_once 'Zend/Loader/Autoloader.php';
 $autoloader = Zend_Loader_Autoloader::getInstance();
 $autoloader->registerNamespace('P_');
+//$autoloader->registerNamespace('Application_Model_');
