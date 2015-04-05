@@ -20,12 +20,12 @@ class P_ProcessorFactory
         $model = new Application_Model_DbTable_PaymentProvider();
         $rowSet = $model->find($providerId);
 
-        if(!count($rowSet))
+        if (!count($rowSet)) {
             throw new Exception('Unknown payment provider');
+        }
 
         $row = $rowSet->current();
-        $class = 'P_'.ucfirst($row->prefix).'_Processor';
+        $class = 'P_' . ucfirst($row->prefix) . '_Processor';
         return new $class();
     }
-
 }

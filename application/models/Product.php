@@ -10,13 +10,17 @@ class Application_Model_Product
     {
         $table = new Application_Model_DbTable_Product();
         $row = $table->find($id);
-        if ($row->count() == 0)
+        if ($row->count() == 0) {
             throw new Exception('Product not exists');
+        }
         $this->id = $id;
         $this->item = $row->getRow(0)->toArray();
 
-        $this->cost = new P_Currency_Value(new P_Currency_Converter(), P_Currency_Value::UNIT,
-            $this->item['cost_units']);
+        $this->cost = new P_Currency_Value(
+            new P_Currency_Converter(),
+            P_Currency_Value::UNIT,
+            $this->item['cost_units']
+        );
     }
 
     public function getTitle()
@@ -24,7 +28,7 @@ class Application_Model_Product
         return $this->item['title'];
     }
 
-    public function getCost($currencyId=null)
+    public function getCost($currencyId = null)
     {
         return $this->cost->convert($currencyId)->format();
     }
@@ -36,6 +40,4 @@ class Application_Model_Product
     {
         return $this->id;
     }
-
 }
-

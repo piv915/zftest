@@ -7,7 +7,4 @@ class Application_Model_DbTable_CurrencyClass extends Zend_Db_Table_Abstract
     const ELECTRONIC = 3;
 
     protected $_name = 'currency_class';
-
-
 }
-

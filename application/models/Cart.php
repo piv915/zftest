@@ -9,26 +9,24 @@ class Application_Model_Cart
         $this->items = [];
     }
 
-    public function addProduct(Application_Model_Product $product, $count=1)
+    public function addProduct(Application_Model_Product $product, $count = 1)
     {
-        if(!$this->isProductInCart($product)) {
+        if (!$this->isProductInCart($product)) {
             $this->items[$product->getId()] = [$product, $count];
-        }
-        else {
+        } else {
             $this->updateProduct($product, $count);
         }
     }
 
     public function updateProduct(Application_Model_Product $product, $countDelta)
     {
-        if($this->isProductInCart($product)) {
+        if ($this->isProductInCart($product)) {
             $productId = $product->getId();
-            $count     = $this->getCountFromRecord($this->items[$productId]);
-            $newCount  = $count + $countDelta;
-            if($newCount <= 0) {
+            $count = $this->getCountFromRecord($this->items[$productId]);
+            $newCount = $count + $countDelta;
+            if ($newCount <= 0) {
                 $this->deleteProduct($product);
-            }
-            else {
+            } else {
                 $this->items[$productId][1] = $newCount;
             }
         }
@@ -36,19 +34,21 @@ class Application_Model_Cart
 
     public function deleteProduct(Application_Model_Product $product)
     {
-        if($this->isProductInCart($product))
+        if ($this->isProductInCart($product)) {
             unset ($this->items[$product->getId()]);
+        }
     }
 
-    public function getItemsCount(Application_Model_Product $product=null)
+    public function getItemsCount(Application_Model_Product $product = null)
     {
         $count = 0;
-        if(!is_null($product) && $this->isProductInCart($product)) {
+        if (!is_null($product) && $this->isProductInCart($product)) {
             $productRecord = $this->items[$product->getId()];
             $count += $this->getCountFromRecord($productRecord);
-        }
-        foreach ($this->items as $productId => $productRecord) {
-            $count += $this->getCountFromRecord($productRecord);
+        } else {
+            foreach ($this->items as $productId => $productRecord) {
+                $count += $this->getCountFromRecord($productRecord);
+            }
         }
         return $count;
     }
@@ -59,21 +59,23 @@ class Application_Model_Cart
         return array_key_exists($productId, $this->items);
     }
 
-    public function getSum(Application_Model_Product $product=null)
+    public function getSum(Application_Model_Product $product = null)
     {
         $sum = 0.0;
 
-        if(empty($this->items))
+        if (empty($this->items)) {
             return $sum;
+        }
 
-        if(!is_null($product) && $this->isProductInCart($product)) {
+        if (!is_null($product) && $this->isProductInCart($product)) {
             $record = $this->items[$product->getId()];
             $sum = $product->getCost() * $this->getCountFromRecord($record);
         }
 
-        if(is_null($product)) {
+        if (is_null($product)) {
             foreach ($this->items as $productId => $productRecord) {
-                $sum += (float)$productRecord[0]->getCost() * $this->getCountFromRecord($productRecord);
+                $sum += floatval($this->getProductFromRecord($productRecord)->getCost())
+                    * $this->getCountFromRecord($productRecord);
             }
         }
 
@@ -103,5 +105,12 @@ class Application_Model_Cart
         return $productRecord[1];
     }
 
+    /**
+     * @param array $productRecord
+     * @return Application_Model_Product
+     */
+    protected function getProductFromRecord(array $productRecord)
+    {
+        return $productRecord[0];
+    }
 }
-

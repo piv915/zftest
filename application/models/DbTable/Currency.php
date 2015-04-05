@@ -14,7 +14,4 @@ class Application_Model_DbTable_Currency extends K_Db_Table
         $data = $this->fetchFromSelect($select);
         return $data;
     }
-
-
 }
-

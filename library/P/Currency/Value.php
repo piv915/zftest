@@ -1,16 +1,16 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: piv
  * Date: 27.03.15
  * Time: 20:44
  */
-
 class P_Currency_Value
 {
     const UNIT = 1;
-    const RUR  = 2;
-    const USD  = 3;
+    const RUR = 2;
+    const USD = 3;
 
     /*
      * @var id currency Id
@@ -42,7 +42,7 @@ class P_Currency_Value
      * @param null $toCurrencyId
      * @return P_Currency_Value
      */
-    public function convert($toCurrencyId=null)
+    public function convert($toCurrencyId = null)
     {
         return $this->converter->convertCurrency($this, $toCurrencyId);
     }
@@ -75,5 +75,4 @@ class P_Currency_Value
     {
         return $this->id;
     }
-
 }

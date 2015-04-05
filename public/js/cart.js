@@ -7,7 +7,7 @@ $(document).ready(function(){
     function Cart(options){
         this.items = {};
         this.props = {};
-        for(var k in options) {
+        for (var k in options) {
             this.props[k] = options[k];
         }
 
@@ -16,10 +16,9 @@ $(document).ready(function(){
         };
 
         this.add = function(id, cost){
-            if(!this.items.hasOwnProperty(id)) {
+            if (!this.items.hasOwnProperty(id)) {
                 this.items[id] = { count: 1, cost: cost }
-            }
-            else {
+            } else {
                 this.items[id] = { count: 1 + this.items[id].count, cost: cost }
             }
             this.updated();
@@ -28,7 +27,9 @@ $(document).ready(function(){
         this.getCount = function() {
             var size = 0, key, obj = this.items;
             for (key in obj) {
-                if (obj.hasOwnProperty(key)) size += obj[key].count;
+                if (obj.hasOwnProperty(key)) {
+                    size += obj[key].count;
+                }
             }
             return size;
         };
@@ -36,7 +37,9 @@ $(document).ready(function(){
         this.getSum = function() {
             var sum = 0, key, obj = this.items;
             for (key in obj) {
-                if (obj.hasOwnProperty(key)) sum += obj[key].count * obj[key].cost;
+                if (obj.hasOwnProperty(key)) {
+                    sum += obj[key].count * obj[key].cost;
+                }
             }
             return sum;
         };
@@ -45,10 +48,9 @@ $(document).ready(function(){
 
             this.props['update'](this.getCount(), this.getSum());
 
-            if(this.getCount()) {
+            if (this.getCount()) {
                 $(this.props['cartSelector']).show(0);
-            }
-            else {
+            } else {
                 $(this.props['cartSelector']).hide(0);
             }
         }

@@ -11,7 +11,7 @@ class Application_Model_Order extends Application_Model_Cart
     private $dateCreate;
     private $status;
 
-//    private $isEmpty;
+    //private $isEmpty;
     /*
      * @var K_UserIdProvider
      */
@@ -20,7 +20,7 @@ class Application_Model_Order extends Application_Model_Cart
     public function __construct(K_UserIdProvider $idProvider)
     {
         $this->idProvider = $idProvider;
-//        $this->isEmpty = true;
+        //$this->isEmpty = true;
     }
 
     public function createFromCart(Application_Model_Cart $cart)
@@ -38,36 +38,32 @@ class Application_Model_Order extends Application_Model_Cart
     public function save()
     {
         $orderModel = new Application_Model_DbTable_Order();
-        $orderRow = $orderModel->find($this->id);
+        $orderRow = $orderModel->find($this->id)->current();
 
-//        var_dump($this->id); var_dump($orderRow);
-
-        if(!count($orderRow))
-        {
-            $orderRow = $orderModel->createRow([
+        if (!$orderRow) {
+            $orderRow = $orderModel->createRow(
+                [
                 'user_id' => $this->userId,
                 'date_create' => $this->dateCreate->format('Y-m-d H:i:s'),
-                'cost_units'  => $this->getSumUnits(),
-                'status_id'   => $this->status
-            ]);
+                'cost_units' => $this->getSumUnits(),
+                'status_id' => $this->status
+                ]
+            );
             $this->id = $orderRow->save();
 
             $productsModel = new Application_Model_DbTable_OrderProduct();
-            foreach ($this->items as $productId => $productRecord)
-            {
-//                $product = $productRecord[0];
-                $count   = $this->getCountFromRecord($productRecord);
+            foreach ($this->items as $productId => $productRecord) {
+                $count = $this->getCountFromRecord($productRecord);
 
-                $row = $productsModel->createRow([
+                $row = $productsModel->createRow(
+                    [
                     'order_id' => $this->id,
                     'product_id' => $productId,
                     'items_count' => $count
-                ]);
+                    ]
+                );
                 $row->save();
             }
-        }
-        else {
-            $orderRow = $orderRow[0];
         }
     }
 
@@ -92,7 +88,7 @@ class Application_Model_Order extends Application_Model_Cart
         $orderModel = new Application_Model_DbTable_Order();
         $orderRow = $orderModel->find($orderId);
 
-        if(!count($orderRow)) {
+        if (!count($orderRow)) {
             throw new Exception('No such order');
         }
 
@@ -100,7 +96,7 @@ class Application_Model_Order extends Application_Model_Cart
         $rows = $productsModel->fetchAll($productsModel->select()->where('order_id = ? ', $orderId))->toArray();
         $items = [];
         foreach ($rows as $row) {
-            $items[$row['product_id']] = [ new Application_Model_Product($row['product_id']), $row['items_count'] ];
+            $items[$row['product_id']] = [new Application_Model_Product($row['product_id']), $row['items_count']];
         }
         $this->items = $items;
         $this->id = $orderId;
@@ -108,7 +104,6 @@ class Application_Model_Order extends Application_Model_Cart
 
     public function getDescription()
     {
-        return 'Заказ №'.$this->getId().' на сайте SITENAME';
+        return 'Заказ №' . $this->getId() . ' на сайте SITENAME';
     }
 }
-

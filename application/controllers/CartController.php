@@ -22,15 +22,14 @@ class CartController extends Zend_Controller_Action
         $orderId = $this->getParam('order_id', null);
         $paymentProvider = $this->getParam('pp', null);
 
-        if(!$orderId) {
+        if (!$orderId) {
             $order->createFromCart($cart);
             $orderId = $order->getId();
-        }
-        else {
+        } else {
             $order->loadById($orderId);
         }
 
-        if($paymentProvider) {
+        if ($paymentProvider) {
             $factory = new P_ProcessorFactory();
             $processor = $factory->createProcessor($this);
 
@@ -38,12 +37,11 @@ class CartController extends Zend_Controller_Action
             $this->view->paymentMethods = $paymentMethods;
 
             $paymentMethod = $this->getParam('payment_method', null);
-            if($paymentMethod) {
+            if ($paymentMethod) {
                 $formText = $processor->buildRedirectForm($order, $paymentMethod);
                 $this->view->payForm = $formText;
             }
         }
-
 
 
         $this->view->order = $order;
@@ -57,11 +55,10 @@ class CartController extends Zend_Controller_Action
         $cart = new Application_Model_Cart();
 
         // TODO: get cart from application/session/form etc.
-//        $cart->addProduct(new Application_Model_Product(1), 2);
-//        $cart->addProduct(new Application_Model_Product(2), 1);
-//        $cart->addProduct(new Application_Model_Product(4), 5);
-        $cart->addProduct(new Application_Model_Product(5),1);
+        //$cart->addProduct(new Application_Model_Product(1), 2);
+        //$cart->addProduct(new Application_Model_Product(2), 1);
+        //$cart->addProduct(new Application_Model_Product(4), 5);
+        $cart->addProduct(new Application_Model_Product(5), 1);
         return $cart;
     }
 }
-

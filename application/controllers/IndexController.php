@@ -10,28 +10,29 @@ class IndexController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $query = ['Aуди X5',
-         'Audi X5',
-         'Khadorkovskiy'];
+        $query = [
+            'Aуди X5',
+            'Audi X5',
+            'Khadorkovskiy'
+        ];
         $query[] = $this->getParam("query");
 
         $translator = new K_StringTranslator();
         $queryList = [];
-        foreach($query as $input) {
+        foreach ($query as $input) {
             $queryList[] = $translator->translate($input);
         }
 
-        $a=$b=$c=null;
+        $a = $b = $c = null;
 
         $o = new Object();
         $o
             ->not()->criteria('name', $a)
             ->and()
-                ->group()
-                    ->criteria('age', $b)
-                    ->criteria('age', $c)
-                ->endGroup()
-        ;
+            ->group()
+            ->criteria('age', $b)
+            ->criteria('age', $c)
+            ->endGroup();
 
 //        var_dump($translator);
         var_dump($queryList);
@@ -41,10 +42,9 @@ class IndexController extends Zend_Controller_Action
     public function formAction()
     {
         $request = $this->getRequest();
-        $form    = new Application_Form_AddPlace();
+        $form = new Application_Form_AddPlace();
 
-        if ($request->isPost())
-        {
+        if ($request->isPost()) {
 
             $form->isValid($request->getPost());
 //            $form->populate($request->getPost());

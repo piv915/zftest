@@ -11,7 +11,7 @@ class Application_Model_DbTable_Product extends Zend_Db_Table_Abstract
 
         $select = $this->getAdapter()->select();
         $select->from($this->_name, 'id')
-        ->where('onsale >= ?', 1);
+            ->where('onsale >= ?', 1);
 
         $rows = $this->getAdapter()->fetchAll($select);
         foreach ($rows as $row) {
@@ -20,6 +20,4 @@ class Application_Model_DbTable_Product extends Zend_Db_Table_Abstract
         }
         return $result;
     }
-
 }
-

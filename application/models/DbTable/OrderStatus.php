@@ -13,4 +13,3 @@ class Application_Model_DbTable_OrderStatus extends Zend_Db_Table_Abstract
         return $this->fetchRow($this->select()->where('sysid = ?', $sysName))->id;
     }
 }
-

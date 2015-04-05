@@ -9,9 +9,9 @@ class Application_Model_DbTable_PaymentProvider extends Zend_Db_Table_Abstract
     public function getPrefixById($id)
     {
         $rs = $this->find($id);
-        if(!count($rs))
+        if (!count($rs)) {
             return null;
+        }
         return $rs->current()->prefix;
     }
 }
-

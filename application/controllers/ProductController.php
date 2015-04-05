@@ -13,11 +13,6 @@ class ProductController extends Zend_Controller_Action
         $productsModel = new Application_Model_DbTable_Product();
         $saledProducts = $productsModel->getAllonSale();
 
-//        var_dump($saledProducts);
-
         $this->view->products = $saledProducts;
     }
-
-
 }
-
