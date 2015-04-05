@@ -23,9 +23,24 @@
       <modelsDirectory>
         <dbTableDirectory>
           <dbTableFile dbTableName="User"/>
+          <dbTableFile dbTableName="Currency"/>
+          <dbTableFile dbTableName="CurrencyClass"/>
+          <dbTableFile dbTableName="CurrencyCourse"/>
+          <dbTableFile dbTableName="Order"/>
+          <dbTableFile dbTableName="OrderProduct"/>
+          <dbTableFile dbTableName="OrderStatus"/>
+          <dbTableFile dbTableName="Payment"/>
+          <dbTableFile dbTableName="PaymentProvider"/>
+          <dbTableFile dbTableName="Product"/>
+          <dbTableFile dbTableName="PsRoboxCurrency"/>
+          <dbTableFile dbTableName="PsRoboxInvoice"/>
+          <dbTableFile dbTableName="Users"/>
         </dbTableDirectory>
         <modelFile modelName="UserMapper"/>
         <modelFile modelName="User"/>
+        <modelFile modelName="Cart"/>
+        <modelFile modelName="Product"/>
+        <modelFile modelName="Order"/>
       </modelsDirectory>
       <modulesDirectory enabled="false"/>
       <servicesDirectory enabled="false"/>

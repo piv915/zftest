@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: piv
  * Date: 04.03.15
  * Time: 14:16
  */
-
 class K_StringTranslator
 {
     /**
@@ -68,13 +68,15 @@ class K_StringTranslator
      */
     public function registerTable($from, $to, $table)
     {
-        if(!isset($this->_directions[$from]))
+        if (!isset($this->_directions[$from])) {
             $this->_directions[$from] = [];
+        }
         $this->_directions[$from][$to] = 'table';
 
-        if(!isset($this->_tables[$from]))
+        if (!isset($this->_tables[$from])) {
             $this->_tables[$from] = [];
-        $this->_tables[$from][$to]    =  $table;
+        }
+        $this->_tables[$from][$to] = $table;
     }
 
     /**
@@ -84,13 +86,15 @@ class K_StringTranslator
      */
     public function registerCallback($from, $to, callable $callback)
     {
-        if(!isset($this->_directions[$from]))
+        if (!isset($this->_directions[$from])) {
             $this->_directions[$from] = [];
+        }
         $this->_directions[$from][$to] = 'callback';
 
-        if(!isset($this->_methods[$from]))
+        if (!isset($this->_methods[$from])) {
             $this->_methods[$from] = [];
-        $this->_methods[$from][$to]    =  $callback;
+        }
+        $this->_methods[$from][$to] = $callback;
     }
 
     /**
@@ -101,32 +105,35 @@ class K_StringTranslator
      * @return array
      * @throws Exception
      */
-    public function translate($string, $from=self::AUTO_DETECT, $to=self::ALL)
+    public function translate($string, $from = self::AUTO_DETECT, $to = self::ALL)
     {
         $result = [$string];
 
         $this->_source = $string;
-        if($from==self::AUTO_DETECT) {
+        if ($from == self::AUTO_DETECT) {
             $this->_autoDetect($this->_source);
         }
 
-        if($to==self::ALL)
+        if ($to == self::ALL) {
             $toList = isset($this->_directions[$this->_from])
                 ? array_keys($this->_directions[$this->_from])
                 : null;
-        else
+        } else {
             $toList = isset($this->_directions[$this->_from][$to]) ? $to : null;
+        }
 
-        if(is_null($toList))
+        if (is_null($toList)) {
             throw new Exception(sprintf('Unknown translate direction [from=%s, to=%s]', $from, $to));
+        }
 
-        foreach($toList as $to) {
+        foreach ($toList as $to) {
             $direction = $this->_directions[$this->_from][$to];
-            switch($direction) {
+            switch ($direction) {
                 case 'callback':
                     $value = call_user_func_array($this->_methods[$this->_from][$to], array($string));
-                    if(false===$value)
+                    if (false === $value) {
                         throw new Exception(sprintf('Error in user callback [from=%s, to=%s]', $this->_from, $to));
+                    }
                     $result[] = $value;
                     break;
                 case 'table':
@@ -146,10 +153,9 @@ class K_StringTranslator
     protected function _autoDetect($string)
     {
         $string = trim($string);
-        if(preg_match('/[а-яё]/i', $string)) {
+        if (preg_match('/[а-яё]/i', $string)) {
             $this->_from = 'RUS';
-        }
-        else {
+        } else {
             $this->_from = 'LAT';
         }
     }
@@ -160,25 +166,140 @@ class K_StringTranslator
     private function registerDefaultDirections()
     {
         $this->registerCallback('RUS', 'LAT',
-            function ($string)
-            {
-                $replace = array("А"=>"A","а"=>"a","Б"=>"B","б"=>"b","В"=>"V","в"=>"v","Г"=>"G","г"=>"g","Д"=>"D","д"=>"d",
-                    "Е"=>"E","е"=>"e","Ё"=>"E","ё"=>"e","Ж"=>"Zh","ж"=>"zh","З"=>"Z","з"=>"z","И"=>"I","и"=>"i",
-                    "Й"=>"I","й"=>"i","К"=>"K","к"=>"k","Л"=>"L","л"=>"l","М"=>"M","м"=>"m","Н"=>"N","н"=>"n","О"=>"O","о"=>"o",
-                    "П"=>"P","п"=>"p","Р"=>"R","р"=>"r","С"=>"S","с"=>"s","Т"=>"T","т"=>"t","У"=>"U","у"=>"u","Ф"=>"F","ф"=>"f",
-                    "Х"=>"Kh","х"=>"kh","Ц"=>"Tc","ц"=>"tc","Ч"=>"Ch","ч"=>"ch","Ш"=>"Sh","ш"=>"sh","Щ"=>"Shch","щ"=>"shch",
-                    "Ы"=>"Y","ы"=>"y","Э"=>"E","э"=>"e","Ю"=>"Iu","ю"=>"iu","Я"=>"Ia","я"=>"ia","ъ"=>"","ь"=>"");
+            function ($string) {
+                $replace = array(
+                    "А" => "A",
+                    "а" => "a",
+                    "Б" => "B",
+                    "б" => "b",
+                    "В" => "V",
+                    "в" => "v",
+                    "Г" => "G",
+                    "г" => "g",
+                    "Д" => "D",
+                    "д" => "d",
+                    "Е" => "E",
+                    "е" => "e",
+                    "Ё" => "E",
+                    "ё" => "e",
+                    "Ж" => "Zh",
+                    "ж" => "zh",
+                    "З" => "Z",
+                    "з" => "z",
+                    "И" => "I",
+                    "и" => "i",
+                    "Й" => "I",
+                    "й" => "i",
+                    "К" => "K",
+                    "к" => "k",
+                    "Л" => "L",
+                    "л" => "l",
+                    "М" => "M",
+                    "м" => "m",
+                    "Н" => "N",
+                    "н" => "n",
+                    "О" => "O",
+                    "о" => "o",
+                    "П" => "P",
+                    "п" => "p",
+                    "Р" => "R",
+                    "р" => "r",
+                    "С" => "S",
+                    "с" => "s",
+                    "Т" => "T",
+                    "т" => "t",
+                    "У" => "U",
+                    "у" => "u",
+                    "Ф" => "F",
+                    "ф" => "f",
+                    "Х" => "Kh",
+                    "х" => "kh",
+                    "Ц" => "Tc",
+                    "ц" => "tc",
+                    "Ч" => "Ch",
+                    "ч" => "ch",
+                    "Ш" => "Sh",
+                    "ш" => "sh",
+                    "Щ" => "Shch",
+                    "щ" => "shch",
+                    "Ы" => "Y",
+                    "ы" => "y",
+                    "Э" => "E",
+                    "э" => "e",
+                    "Ю" => "Iu",
+                    "ю" => "iu",
+                    "Я" => "Ia",
+                    "я" => "ia",
+                    "ъ" => "",
+                    "ь" => ""
+                );
                 $string = strtr($string, $replace);
-                return($string);
+                return ($string);
             }
         );
 
-        $lat2rusTable = array_flip(["А"=>"A","а"=>"a","Б"=>"B","б"=>"b","В"=>"V","в"=>"v","Г"=>"G","г"=>"g","Д"=>"D","д"=>"d",
-            "Е"=>"E","е"=>"e","Ё"=>"E","ё"=>"e","Ж"=>"Zh","ж"=>"zh","З"=>"Z","з"=>"z","И"=>"I","и"=>"i",
-            "К"=>"K","к"=>"k","Л"=>"L","л"=>"l","М"=>"M","м"=>"m","Н"=>"N","н"=>"n","О"=>"O","о"=>"o",
-            "П"=>"P","п"=>"p","Р"=>"R","р"=>"r","С"=>"S","с"=>"s","Т"=>"T","т"=>"t","У"=>"U","у"=>"u","Ф"=>"F","ф"=>"f",
-            "Х"=>"Kh","х"=>"kh","Ц"=>"Tc","ц"=>"tc","Ч"=>"Ch","ч"=>"ch","Ш"=>"Sh","ш"=>"sh","Щ"=>"Sch","щ"=>"Sch",
-            "Ы"=>"Y","ы"=>"y","Э"=>"E","э"=>"e","Ю"=>"Iu","ю"=>"iu","Я"=>"Ia","я"=>"ia"]);
-        $this->registerTable('LAT', 'RUS',$lat2rusTable);
+        $lat2rusTable = array_flip([
+            "А" => "A",
+            "а" => "a",
+            "Б" => "B",
+            "б" => "b",
+            "В" => "V",
+            "в" => "v",
+            "Г" => "G",
+            "г" => "g",
+            "Д" => "D",
+            "д" => "d",
+            "Е" => "E",
+            "е" => "e",
+            "Ё" => "E",
+            "ё" => "e",
+            "Ж" => "Zh",
+            "ж" => "zh",
+            "З" => "Z",
+            "з" => "z",
+            "И" => "I",
+            "и" => "i",
+            "К" => "K",
+            "к" => "k",
+            "Л" => "L",
+            "л" => "l",
+            "М" => "M",
+            "м" => "m",
+            "Н" => "N",
+            "н" => "n",
+            "О" => "O",
+            "о" => "o",
+            "П" => "P",
+            "п" => "p",
+            "Р" => "R",
+            "р" => "r",
+            "С" => "S",
+            "с" => "s",
+            "Т" => "T",
+            "т" => "t",
+            "У" => "U",
+            "у" => "u",
+            "Ф" => "F",
+            "ф" => "f",
+            "Х" => "Kh",
+            "х" => "kh",
+            "Ц" => "Tc",
+            "ц" => "tc",
+            "Ч" => "Ch",
+            "ч" => "ch",
+            "Ш" => "Sh",
+            "ш" => "sh",
+            "Щ" => "Sch",
+            "щ" => "Sch",
+            "Ы" => "Y",
+            "ы" => "y",
+            "Э" => "E",
+            "э" => "e",
+            "Ю" => "Iu",
+            "ю" => "iu",
+            "Я" => "Ia",
+            "я" => "ia"
+        ]);
+        $this->registerTable('LAT', 'RUS', $lat2rusTable);
     }
 }

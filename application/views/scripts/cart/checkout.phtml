@@ -1,0 +1,54 @@
+<?php
+
+$order = $this->order;
+$items = $order->getItems();
+
+$paymentMethods = $this->paymentMethods;
+$payForm = $this->payForm;
+
+?>
+
+Сформирован заказ № <?=$order->getId()?> на сумму <?=$order->getSum()?>.
+
+<?php foreach ($items as $item):
+    $product = $item[0];
+    $count   = $item[1];
+    ?>
+    <div class="product">
+        <?=$product->getTitle();?>
+        &nbsp;&mdash;
+        <?=$count;?>шт.
+        &nbsp;&mdash;
+        <?=$product->getCost() * $count;?>
+        &nbsp;
+    </div>
+<?php endforeach; ?>
+
+
+<?php if($payForm): ?>
+
+    <?=$payForm;?>
+
+<?php endif; ?>
+
+
+<form method="post" action="/cart/checkout">
+    <fieldset>
+        <label>Итого: <?= $order->getSum(); ?></label><br>
+        <input type="hidden" name="order_id" value="<?=$order->getId()?>"/>
+        <label><input type="radio" name="pp" value="1" checked="checked"/>Робокасса</label>
+        <label><input type="radio" name="pp" value="2"/> Кто-то еще (фейк)</label>
+
+        <?php if($paymentMethods):
+            foreach($paymentMethods as $method):
+                ?>
+                <img width="100" height="50" src="/i/<?=$method['logotype']?$method['logotype']:'dot.gif'?>"/>
+                <label><input type="radio" name="payment_method"
+                              value="<?=$method['id']?>"/><?=$method['title']?> &ndash; <?=$method['sum'] ?> руб
+                    .</label>
+            <?php 	endforeach;
+        endif; ?>
+
+        <button>Оплатить</button>
+    </fieldset>
+</form>
